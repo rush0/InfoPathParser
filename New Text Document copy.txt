@@ -1,0 +1,140 @@
+clear();
+function getJquerySelector(normalString, inFolder){
+
+    var result = "";
+
+    if( normalString.push ){
+
+        for(var i = 0; i < normalString.length; i++){
+            if( i != normalString.length-1 ){
+                result += getJquerySelector( normalString[i], inFolder ) + ",";
+            }
+            else{
+                result += getJquerySelector( normalString[i], inFolder );
+            }
+        }
+    }
+    
+    else {
+    
+        if ( inFolder ){
+            result = "xsl\\:template[match='" + normalString + "']";
+        }
+        else{
+            // replace colons
+            result = normalString.replace(/:/g, "\\:");
+        
+            // replace periods
+            result = result.replace(/\./g, "\\.");    
+                
+            if ( inFolder ){
+                result = "xsl\\:template[match='" + result + "']";
+            }
+        }
+    }
+
+    console.log( "jQuery formatted string: " + result );
+    
+    return result;
+}
+
+var sectionNames = ["my:P.PROJECT.MGMT", "my:A.ADVISORY.SERVICES", "my:E.ENGINEERING.SERVICES", "my:C.CONSTRUCTION.SERVICES"];
+
+var fields = [];
+
+var values = $( $("script#infopathformvalues").text() );
+    values.find( getJquerySelector( sectionNames, false ) ).children().each(function(){
+    fields.push( this.nodeName );
+});
+
+console.log( fields.length + " Fields found" );
+
+var form = $( $("script#infopathform").text() );
+var cellcount = 0;
+var cellFields = "";
+var inputFieldCount = 0;
+
+form.find( getJquerySelector(sectionNames, true) ).each(function(){
+    var section = $(this);
+    section.find("td").filter(function(){
+        return ($(this).find("input.xdBehavior_Boolean[name*='my:Engineering1.00']").length > 0);
+    }).each(function(){
+        var cell = $(this);
+        var input = cell.find("input.xdBehavior_Boolean[name*='my:Engineering1.00']");
+        var fieldName = input.closest("td").next().text();
+        console.log( fields[cellcount] + " --------- " + fieldName);
+        
+        cellcount++;
+    });
+
+});
+
+console.log(cellcount + " Cells Found");
+
+
+
+
+
+
+
+====================
+
+
+
+clear();
+function getJquerySelector(normalString, inFolder){
+
+    var result = "";
+
+    if( normalString.push ){
+
+        for(var i = 0; i < normalString.length; i++){
+            if( i != normalString.length-1 ){
+                result += getJquerySelector( normalString[i], inFolder ) + ",";
+            }
+            else{
+                result += getJquerySelector( normalString[i], inFolder );
+            }
+        }
+    }
+    
+    else {
+    
+        if ( inFolder ){
+            result = "xsl\\:template[match='" + normalString + "']";
+        }
+        else{
+            // replace colons
+            result = normalString.replace(/:/g, "\\:");
+        
+            // replace periods
+            result = normalString.replace(/\./g, "\\.");    
+                
+            if ( inFolder ){
+                result = "xsl\\:template[match='" + result + "']";
+            }
+        }
+    }
+
+    console.log( "jQuery formatted string: " + result );
+    
+    return result ;
+}
+
+var sectionNames = ["my:P.PROJECT.MGMT", "my:A.ADVISORY.SERVICES", "my:E.ENGINEERING.SERVICES", "my:C.CONSTRUCTION.SERVICES"];
+
+var form = $( $("script#infopathform").text() );
+var total = 0;
+form.find( getJquerySelector(sectionNames, true) ).each(function(){
+    var section = $(this);
+    console.log($(this).attr("match"));
+    
+        section.find("input.xdBehavior_Boolean[name*='my:Engineering1.00)}']").each(function(){
+            total++;
+            var inputField = $(this);
+            console.log( inputField.closest("td").html().toString().match(/Engineering1.00/ig).length );
+        });
+});
+
+console.log(total + " Fields Found");
+
